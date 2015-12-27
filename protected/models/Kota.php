@@ -16,7 +16,11 @@ class Kota extends CActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
-	
+	public $idProp;
+	public $provinsi;
+	public $provinsi_id;
+
+
 	public function tableName()
 	{
 		return 'kota';
@@ -59,7 +63,7 @@ class Kota extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'provinsi_id' => 'Provinsi',
-			'nm_kota' => 'Nm Kota',
+			'nm_kota' => 'Nama Kota',
 		);
 	}
 

@@ -1,6 +1,6 @@
 <?php
 
-class KotaController extends Controller
+class UserController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -11,9 +11,6 @@ class KotaController extends Controller
 	/**
 	 * @return array action filters
 	 */
-
-
-
 	public function filters()
 	{
 		return array(
@@ -35,12 +32,12 @@ class KotaController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','tampilKota','tampilkan','daftarProvinsi','kotaMenurutProp'),
-				'users'=>array('@'),
+				'actions'=>array('create','update'),
+				'users'=>array('wasih'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('admin','wasih'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -48,29 +45,10 @@ class KotaController extends Controller
 		);
 	}
 
-
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionTampilKota(){
-		$model = Yii::app()->db->createCommand()
-						   ->select('kota.id,kota.nm_kota,provinsi.provinsi')
-						   ->from('kota,provinsi')
-						   ->where('kota.provinsi_id=provinsi.id')
-						   ->query();
-        $this->render('tampilKota',array('model'=>$model));
-	}
-
-	public function actionTampilkan(){
-		$model = Yii::app()->db->createCommand()
-						   ->select('kota.id,kota.nm_kota,provinsi.provinsi')
-						   ->from('kota,provinsi')
-						   ->where('kota.provinsi_id=provinsi.id')
-						   ->query();
-        $this->render('tampilkan',array('model'=>$model));
-	}
-
 	public function actionView($id)
 	{
 		$this->render('view',array(
@@ -78,34 +56,22 @@ class KotaController extends Controller
 		));
 	}
 
-	public function actionDaftarProvinsi(){
-        $model=new Provinsi;
-        $this->render('daftarProvinsi', array(
-        	     'model'=>$model,
-        ));
-	}
-
-	public function actionKotaMenurutProp(){
-		$model=new Kota;
-		$this->render('kotaMenurutProp',array(
-			    'model'=>$model,
-	    ));
-	}
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
 	{
-		$model=new Kota;
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$model=new User;
 
-		if(isset($_POST['Kota']))
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['User']))
 		{
-			$model->attributes=$_POST['Kota'];
+			$model->attributes=$_POST['User'];
 			if($model->save())
-				$this->redirect(array('kotaMenurutProp','provinsi_id'=>$idProp));
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('create',array(
@@ -125,9 +91,9 @@ class KotaController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Kota']))
+		if(isset($_POST['User']))
 		{
-			$model->attributes=$_POST['Kota'];
+			$model->attributes=$_POST['User'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -156,7 +122,7 @@ class KotaController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Kota');
+		$dataProvider=new CActiveDataProvider('User');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -167,10 +133,10 @@ class KotaController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Kota('search');
+		$model=new User('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Kota']))
-			$model->attributes=$_GET['Kota'];
+		if(isset($_GET['User']))
+			$model->attributes=$_GET['User'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -181,12 +147,12 @@ class KotaController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Kota the loaded model
+	 * @return User the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Kota::model()->findByPk($id);
+		$model=User::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -194,11 +160,11 @@ class KotaController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Kota $model the model to be validated
+	 * @param User $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='kota-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

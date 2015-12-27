@@ -2,9 +2,11 @@
 /* @var $this KotaController */
 /* @var $model Kota */
 
+
+
 $this->breadcrumbs=array(
 	'Kota'=>array('index'),
-	'Manage',
+	'create',
 );
 
 $idProp=$_GET['provinsi_id'];
@@ -26,7 +28,7 @@ $('.search-form form').submit(function(){
 <h2>Manajemen Data Kota</h2>
 
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+
 <div class="search-form" style="display:none">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,
@@ -37,7 +39,13 @@ $('.search-form form').submit(function(){
 			$prop=Provinsi::model()->findByPk($idProp);
 			$this->renderPartial('_provinsi', array('model'=>$prop,));
 	?>
-
+<div class="row-button-2">
+	<?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/search.png'),'#',
+	     array('class'=>'search-button','title'=>'Pencarian Data')); ?>
+     <?php echo  CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/pencil.png'),
+         array('create','provinsi_id'=>$idProp),
+         array('title'=>'Menambah Data')) ;?>
+</div>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'kota-grid',
 	'dataProvider'=>$model->searchKota($idProp),

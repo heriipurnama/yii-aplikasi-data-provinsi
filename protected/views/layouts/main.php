@@ -34,9 +34,12 @@
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Provinsi', 'url'=>array('/provinsi/index')),
-				array('label'=>'Kota', 'url'=>array('/kota/index')),
-				array('label'=>'Pegawai', 'url'=>array('/pegawai/index')),
+				array('label'=>'Provinsi', 'url'=>array('/provinsi/index'),
+				     	'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'Kota', 'url'=>array('/kota/index'),
+						'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'Pegawai', 'url'=>array('/pegawai/index'),
+					    'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)

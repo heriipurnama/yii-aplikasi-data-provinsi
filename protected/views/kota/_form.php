@@ -21,18 +21,24 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'provinsi_id'); ?>
-		<?php echo $form->textField($model,'provinsi_id'); ?>
+		<?php echo $form->textField($model,'provinsi_id',array('size'=>4,
+		                            'value'=>$_GET['provinsi_id'])); ?>
 		<?php echo $form->error($model,'provinsi_id'); ?>
-	</div>
+		
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'nm_kota'); ?>
+		<?php echo $form->textField($model,'nama_provinsi',array('size'=>20,
+		                            'value'=>Provinsi::model()->findByPk
+		                             ($_GET['provinsi_id'])->provinsi)); ?>
+
+
+		<?php echo $form->labelEx($model,'Nama Kota'); ?>
 		<?php echo $form->textField($model,'nm_kota',array('size'=>50,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'nm_kota'); ?>
+
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '= Tambah =' : 'Save'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -1,34 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "provinsi".
+ * This is the model class for table "user".
  *
- * The followings are the available columns in table 'provinsi':
+ * The followings are the available columns in table 'user':
  * @property integer $id
- * @property string $provinsi
+ * @property string $full_name
+ * @property string $username
+ * @property string $password
+ * @property string $email
+ * @property integer $active
  */
-class Provinsi extends CActiveRecord
+class User extends CActiveRecord
 {
-	public $provinsi_id;
-	public $nm_kota;
-	public $nama_provinsi;
-	public $model;
-	public $idProp;
-
-
-
-
-	public function getKotaUrl(){
-		return Yii::app()->createUrl('/kota/kotaMenurutProp',
-			array('provinsi_id'=>$this->id,)
-			 );
-     }
 	/**
 	 * @return string the associated database table name
 	 */
+	public $password_repeat;
+	private $_existed;
+
 	public function tableName()
 	{
-		return 'provinsi';
+		return 'user';
 	}
 
 	/**
@@ -39,11 +32,27 @@ class Provinsi extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('provinsi', 'length', 'max'=>50),
+			array('username','validasiNama'),
+			array('full_name,username,password,email','required'),
+			array('email','email','message'=>"Nama Email Tidak benar"),
+			array('email','unique','message'=>"Email ok"),
+			array('active', 'numerical', 'integerOnly'=>true),
+			array('full_name', 'length', 'max'=>50),
+			array('password, password_repeat', 'length', 'min'=>2, 'max'=>40),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, provinsi', 'safe', 'on'=>'search'),
+			array('password','compare'),
+			       array('password_repeat','safe'),
+			array('id, full_name, username, password, email, 
+				  active', 'safe', 'on'=>'search'),
 		);
+	}
+	
+	public function validasiNama($attribute, $params){
+			$this->_existed = self::model()->exists('username=:usr_name', array(
+				':usr_name'=>$this->username, ));
+			if ($this->_existed)
+				$this->addError('username','Username yang sama sudah adaa. . . .!!!!');
 	}
 
 	/**
@@ -64,10 +73,30 @@ class Provinsi extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'provinsi' => 'Provinsi',
+			'full_name' => 'Full Name',
+			'username' => 'Username',
+			'password' => 'Password',
+			'email' => 'Email',
+			'active' => 'Active',
 		);
 	}
 
+	// enkripsi password//
+	protected function beforeSave(){
+			if (parent::beforeSave()) {
+				# code...
+				if ($this->isNewRecord) {
+					# code...
+					$this->password=MD5($this->password);
+				}
+				else
+					$thi->password=MD5($this->password);
+				return true;
+			}
+			else
+				return false;
+
+	}
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
@@ -87,7 +116,11 @@ class Provinsi extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('provinsi',$this->provinsi,true);
+		$criteria->compare('full_name',$this->full_name,true);
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->compare('active',$this->active);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -98,7 +131,7 @@ class Provinsi extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Provinsi the static model class
+	 * @return User the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

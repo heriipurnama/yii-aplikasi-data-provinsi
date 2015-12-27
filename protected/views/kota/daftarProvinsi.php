@@ -42,7 +42,7 @@ $('.search-form form').submit(function(){
 	<?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/info.png'),'#',
          array('title'=>'Petunjuk','onclick'=>"$('#helpdialog').dialog('open')",)); ?>
      <?php echo  CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/pencil.png'),
-         array('create'),array('title'=>'Menambah Data')) ;?>
+         array('provinsi/create'),array('title'=>'Menambah Data')) ;?>
 </div>
 
 <?php echo CHtml::link('Cari','#',array('class'=>'search-button')); ?>
